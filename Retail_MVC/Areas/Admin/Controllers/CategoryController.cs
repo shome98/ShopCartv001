@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Retail_MVC.DataAccess.Data;
 using Retail_MVC.Models;
 using Retail_MVC.DataAccess.Repository.IRepository;
-using Retail_MVC.DataAccess.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Retail_MVC.Utility;
 

@@ -28,8 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Aspects\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="wwwroot\images\product\" />
   </ItemGroup>
 

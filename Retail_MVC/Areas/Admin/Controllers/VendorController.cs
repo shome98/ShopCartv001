@@ -1,14 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Retail_MVC.DataAccess.Repository.IRepository;
 using Retail_MVC.Models;
-using Retail_MVC.Models.ViewModels;
-using System.Collections.Generic;
-using System.Data;
-using Retail_MVC.DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using Retail_MVC.Utility;
-using System.Runtime.CompilerServices;
 
 namespace Retail_MVC.Areas.Admin.Controllers
 {

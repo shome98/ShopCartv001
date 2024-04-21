@@ -22,7 +22,7 @@ namespace Retail_MVC.DataAccess.Repository.IRepository
     public interface IOrderHeaderRepository : IRepository<OrderHeader>
     {
         Task UpdateAsync(OrderHeader obj);
-        Task UpdateStatusAsync(int id, string orderStatus, string paymentStatus);
+        Task UpdateStatusAsync(int id, string orderStatus, string? paymentStatus=null);
         Task UpdateStripePaymentIdAsync(int id, string sessionId, string paymentIntentId);
     }
 }
