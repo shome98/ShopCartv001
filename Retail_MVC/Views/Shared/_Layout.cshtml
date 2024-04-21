@@ -1,7 +1,4 @@
-﻿@* ﻿@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor HttpContextAccessor *@
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,36 +24,41 @@
                         <li class="nav-item">
                             <a class="nav-link " asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Courier))
+                        @if (!User.IsInRole(SD.Role_Vendor))
                         {
                             <li class="nav-item">
                                 <a class="nav-link " asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a>
                             </li>
                         }
                         @if (User.IsInRole(SD.Role_Admin))
-                        {  
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Manage Section
-                            </a>
-                            <ul class="dropdown-menu">
-                                
-                                <li class="nav-item">
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                                </li>
-                               
-                                <li class="nav-item">
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Vendor" asp-action="Index">Vendor</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                 
-                            </ul>
-                        </li>
-                        }
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Manage Section
+                                </a>
+                                <ul class="dropdown-menu">
 
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Vendor" asp-action="Index">Vendor</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Courier" asp-action="Index">Courier</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+
+                                </ul>
+                            </li>
+                        }
                         @if (User.IsInRole(SD.Role_Vendor))
                         {
                             <li class="nav-item dropdown">
@@ -76,15 +78,16 @@
                                 </ul>
                             </li>
                         }
-
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart"></i>&nbsp;(0)
-                            </a>
-                        </li>
-                       
+                        @if (User.IsInRole(SD.Role_Customer))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link " asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart"></i>&nbsp; Cart
+                                </a>
+                            </li>
+                        }
                     </ul>
-                    <partial name="_LoginPartial"/>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
@@ -94,7 +97,6 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer bg-primary text-muted">
         <div class="container">
             &copy; 2024 - Retail_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

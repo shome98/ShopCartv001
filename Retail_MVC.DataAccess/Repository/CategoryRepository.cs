@@ -16,7 +16,7 @@ namespace Retail_MVC.DataAccess.Repository
 
         public async Task UpdateAsync(Category obj)
         {
-            _db.categories.Update(obj);
+            _db.Categories.Update(obj);
             await _db.SaveChangesAsync();
         }
     }

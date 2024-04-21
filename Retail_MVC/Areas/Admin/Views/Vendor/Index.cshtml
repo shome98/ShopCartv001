@@ -6,43 +6,41 @@
 			<h2 class="text-primary">Vendor List</h2>
 		</div>
 		<div class="col-6 text-end">
-			<a asp-controller="Vendor" asp-action="Upsert" class="btn btn-primary">
+			<a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary">
 				<i class="bi bi-plus-circle"></i>add Vendor
 			</a>
 		</div>
 	</div>
-<table class="table table-bordered table-striped">
-	<thead>
-		<tr>
-			<th> Name</th>
-			<th>City</th>
-			<th>State</th>
-			<th>Phone</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var v in Model)
-		{
+	<table class="table table-bordered table-striped">
+		<thead>
 			<tr>
-				<td>@v.Name</td>
-				<td>@v.City</td>
-				<td>@v.State</td>
-				<td>@v.PhoneNumber</td>
-				<td>
-					<div class="w-75 btn-group" role="group">
-						<a asp-controller="Vendor" asp-action="Upsert" asp-route-id="@v.Id" class="btn btn-primary mx-2">
-							Edit
-						</a>
+				<th> Name</th>
+				<th>City</th>
+				<th>State</th>
+				<th>Phone</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var v in Model)
+			{
+				<tr>
+					<td>@v.Name</td>
+					<td>@v.City</td>
+					<td>@v.State</td>
+					<td>@v.PhoneNumber</td>
+					<td>
+						<div class="w-75 btn-group" role="group">
+							<a asp-controller="Vendor" asp-action="Upsert" asp-route-id="@v.Id" class="btn btn-primary mx-2">
+								Edit
+							</a>
 							<a asp-controller="Vendor" asp-action="Delete" asp-route-id="@v.Id" class="btn btn-danger mx-2">
 								Delete
 							</a>
-
-					</div>
-
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>

@@ -16,7 +16,7 @@ namespace Retail_MVC.DataAccess.Repository
 
         public async Task UpdateAsync(Vendor obj)
         {
-            _db.vendors.Update(obj);
+            _db.Vendors.Update(obj);
             await _db.SaveChangesAsync();
         }
     }

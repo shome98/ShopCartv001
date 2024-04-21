@@ -15,7 +15,7 @@ namespace Retail_MVC.DataAccess.Repository
         {
             _db = db;
             this.dbSet = _db.Set<T>();
-            _db.products.Include(u => u.Category).Include(u => u.CategoryId);
+            _db.Products.Include(u => u.Category).Include(u => u.CategoryId);
         }
 
         public async Task AddAsync(T entity)

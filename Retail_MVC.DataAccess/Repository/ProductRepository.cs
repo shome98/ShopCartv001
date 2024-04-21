@@ -17,7 +17,7 @@ namespace Retail_MVC.DataAccess.Repository
 
         public async Task UpdateAsync(Product obj)
         {
-            var objFromDb = await _db.products.FirstOrDefaultAsync(u => u.Id == obj.Id);
+            var objFromDb = await _db.Products.FirstOrDefaultAsync(u => u.Id == obj.Id);
             if (objFromDb != null)
             {
                 objFromDb.Name = obj.Name;

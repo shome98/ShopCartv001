@@ -113,22 +113,22 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
             public string Name { get; set; }
             public string? StreetAddress { get; set; }
             public string? City { get; set; }
-            public string? State {  get; set; }
-            public string? PostalCode { get; set;}
-            public string? PhoneNumber {  get; set; }
+            public string? State { get; set; }
+            public string? PostalCode { get; set; }
+            public string? PhoneNumber { get; set; }
 
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if(!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
+            if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Courier)).GetAwaiter().GetResult();
-				_roleManager.CreateAsync(new IdentityRole(SD.Role_Vendor)).GetAwaiter().GetResult();
-			}
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Courier)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Vendor)).GetAwaiter().GetResult();
+            }
             Input = new()
             {
                 RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
@@ -155,9 +155,9 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
                 user.Name = Input.Name;
                 user.StreetAddress = Input.StreetAddress;
                 user.City = Input.City;
-                user.State=Input.State;
+                user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
-                user.PhoneNumber=Input.PhoneNumber;
+                user.PhoneNumber = Input.PhoneNumber;
 
 
 
@@ -167,7 +167,7 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    if(!String.IsNullOrEmpty(Input.Role))
+                    if (!String.IsNullOrEmpty(Input.Role))
                     {
                         await _userManager.AddToRoleAsync(user, Input.Role);
                     }
@@ -194,7 +194,15 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(SD.Role_Admin))
+                        {
+
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
+
                         return LocalRedirect(returnUrl);
                     }
                 }
