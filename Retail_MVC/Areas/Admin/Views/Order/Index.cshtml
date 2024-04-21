@@ -1,0 +1,49 @@
+﻿@model List<OrderHeader>
+
+
+<div class="container">
+	<div class="row pt-4 pb-3">
+		<div class="col-6">
+			<h2 class="text-primary">Order List</h2>
+		</div>
+		
+	</div>
+	<div class="card-body p-4">
+        
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Phone Number</th>
+				<th>Email</th>
+				<th>Status</th>
+				<th>Total</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var v in Model)
+			{
+				<tr>
+					<td>@v.Id</td>
+					<td>@v.Name</td>
+					<td>@v.PhoneNumber</td>
+					<td>@v.ApplicationUser.Email</td>
+					<td>@v.OrderStatus</td>
+					<td>@v.OrderTotal</td>
+					<td>
+						<div class="w-75 btn-group" role="group">
+							<a asp-controller="Order" asp-action="Details" asp-route-orderId="@v.Id" class="btn btn-primary mx-2">
+								Edit
+							</a>
+							
+
+						</div>
+
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

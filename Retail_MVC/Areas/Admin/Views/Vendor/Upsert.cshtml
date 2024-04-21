@@ -1,0 +1,68 @@
+﻿@model Vendor
+
+<form method="post"> 
+	<input asp-for="Id" hidden />
+
+	<div class="row pb-2">
+		<h2 class="text-primary">@(Model.Id != 0 ? "Edit" : "Create") Vendor</h2>
+		<hr />
+	</div>
+	<div class="row">
+
+		<div class="col-12">
+			<div class="border p-3 mt-4">
+
+				<div class="mb-3 row p-1">
+					<label class="p-0">Vendor Name</label>
+					<input asp-for="Name" type="text" class="form-control" />
+				</div>
+				<div class="mb-3 row p-1">
+					<label class="p-0">Street Address</label>
+					<input asp-for="StreetAddress" type="text" class="form-control" />
+				</div>
+				<div class="mb-3 row p-1">
+					<label class="p-0">City</label>
+					<input asp-for="City" type="text" class="form-control" />
+				</div>
+				<div class="mb-3 row p-1">
+					<label class="p-0">State</label>
+					<input asp-for="State" type="text" class="form-control" />
+				</div>
+				<div class="mb-3 row p-1">
+					<label class="p-0">Postal Code</label>
+					<input asp-for="PostalCode" type="text" class="form-control" />
+				</div>
+				<div class="mb-3 row p-1">
+					<label class="p-0">Phone</label>
+					<input asp-for="PhoneNumber" type="text" class="form-control" />
+				</div>
+
+				<div class="row">
+					<div class="col-6 col-md-3">
+						@if (Model.Id != 0)
+						{
+							<button type="submit" class="btn btn-primary form-control">Update</button>
+						}
+						else
+						{
+							<button type="submit" class="btn btn-primary form-control">Create</button>
+						}
+
+					</div>
+					<div class="col-6 col-md-3">
+						<a asp-controller="Vendor" asp-index="Index" class="btn btn-secondary border form-control" style="width:150px">Back To List</a>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		
+
+	</div>
+		
+
+
+
+
+</form>

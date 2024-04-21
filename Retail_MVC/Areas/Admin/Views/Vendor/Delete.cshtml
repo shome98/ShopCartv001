@@ -1,0 +1,45 @@
+﻿@model Vendor
+
+<form method="post">
+	<div class="border p-3 mt-4">
+		<div class="row pb-2">
+			<h2 class="text-primary">Edit Vendor</h2>
+			<hr />
+		</div>
+		<div class="mb-3 row p-1">
+			<label class="p-0">Vendor Name</label>
+			<input asp-for="Name" type="text" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label class="p-0">Street Address</label>
+			<input asp-for="StreetAddress" type="text" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label class="p-0">City</label>
+			<input asp-for="City" type="text" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label class="p-0">State</label>
+			<input asp-for="State" type="text" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label class="p-0">Postal Code</label>
+			<input asp-for="PostalCode" type="text" class="form-control" />
+		</div>
+		<div class="mb-3 row p-1">
+			<label class="p-0">Phone Number</label>
+			<input asp-for="PhoneNumber" type="text" class="form-control" />
+		</div>
+
+		<div class="row">
+			<div class="col-6 col-md-3">
+				<button type="submit" class="btn btn-primary form-control">Delete</button>
+			</div>
+			<div class="col-6 col-md-3">
+				<a asp-controller="Vendor" asp-index="Index" class="btn btn-secondary border form-control" style="width:150px">Back To List</a>
+			</div>
+
+		</div>
+
+	</div>
+</form>
