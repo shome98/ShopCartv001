@@ -12,10 +12,11 @@ namespace Retail_MVC.DataAccess.Data
             
         }
 
-        public DbSet<Category> categories { get; set; }
-        public DbSet<Product> products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
 
-        public DbSet<Vendor> vendors { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<Courier> Couriers { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         public DbSet<OrderHeader> OrderHeaders { get; set; }
