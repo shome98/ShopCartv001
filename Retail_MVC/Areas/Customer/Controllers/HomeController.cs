@@ -66,10 +66,24 @@ namespace Retail_MVC.Areas.Customer.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(string searchTerm)
+        {
+            IEnumerable<Product> filtered = await _unitOfWork.Product.GetAllAsync();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var result = filtered.Where(u => string.Equals(u.Name, searchTerm, StringComparison.CurrentCultureIgnoreCase) || string.Equals(u.Description, searchTerm, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                return View("Index", result);
+            }
+            return View("Index", filtered);
+
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

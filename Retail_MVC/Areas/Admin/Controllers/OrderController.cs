@@ -6,6 +6,7 @@ using Retail_MVC.Models.ViewModels;
 using Retail_MVC.Utility;
 using Stripe;
 using Stripe.Checkout;
+using System.Security.Claims;
 
 
 namespace Retail_MVC.Areas.Admin.Controllers
@@ -23,15 +24,25 @@ namespace Retail_MVC.Areas.Admin.Controllers
 
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            // List<OrderHeader> prodobj = await _unitOfWork.OrderHeader.GetAllAsync(includeProperties: "ApplicationUser").ToList();
-            var prodobj = await _unitOfWork.OrderHeader.GetAllAsync(includeProperties: "ApplicationUser");
+            IEnumerable<OrderHeader> prodobj;
+            if(User.IsInRole(SD.Role_Admin)|| User.IsInRole(SD.Role_Courier))
+            {
+                prodobj = await _unitOfWork.OrderHeader.GetAllAsync(includeProperties: "ApplicationUser");
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                prodobj = await _unitOfWork.OrderHeader.GetAllAsync(u=>u.ApplicationUserId==userId,includeProperties:"ApplicationUser");
+            }
             return View(prodobj);
         }
 
-        public async Task<IActionResult> Details(int orderId)
+        [Authorize]
+		public async Task<IActionResult> Details(int orderId)
         {
             OrderVM= new()
             {
@@ -72,6 +83,7 @@ namespace Retail_MVC.Areas.Admin.Controllers
         [Authorize(Roles =SD.Role_Admin+","+SD.Role_Courier)]
         public async Task<IActionResult> StartProcessing()
         {
+
             await _unitOfWork.OrderHeader.UpdateStatusAsync(OrderVM.OrderHeader.Id, SD.StatusInProcess);
             await _unitOfWork.SaveAsync();
             TempData["Success"] = "Order Details Updated Successfully";
