@@ -24,9 +24,16 @@ namespace Retail_MVC.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //List<Product> prodobj= await _unitOfWork.Product.GetAllAsync(includeProperties:"Category");
-            var prodobj = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
-            return View(prodobj);
+            try
+            {
+                var prodobj = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
+                return View(prodobj);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An occured while getting the products!!!", ex);
+            }
+            
         }
 
         public async Task<IActionResult> Upsert(int? id)
@@ -43,15 +50,23 @@ namespace Retail_MVC.Areas.Admin.Controllers
 
             else
             {
-                productVM.Product = await _unitOfWork.Product.GetAsync(u => u.Id == id);
-                return View(productVM);
+                try
+                {
+                    productVM.Product = await _unitOfWork.Product.GetAsync(u => u.Id == id);
+                    return View(productVM);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An occured while getting the product with {id}!!!", ex);
+                }
+                
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Upsert(ProductVM productVM, IFormFile? file)
         {
-            productVM.Product.Id = 0;
+            
             if(ModelState.IsValid)
             {
                 string wwwRootPath=_webHostEnvironment.WebRootPath;
@@ -78,11 +93,25 @@ namespace Retail_MVC.Areas.Admin.Controllers
                 }
                 if(productVM.Product.Id == 0)
                 {
-                    await _unitOfWork.Product.AddAsync(productVM.Product);
+                    try
+                    {
+                        await _unitOfWork.Product.AddAsync(productVM.Product);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("An occured while adding the new product!!! ", ex);
+                    }
                 }
                 else
                 {
-                    await _unitOfWork.Product.UpdateAsync(productVM.Product);
+                    try
+                    {
+                        await _unitOfWork.Product.UpdateAsync(productVM.Product);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"An occured while updating the  product with id{productVM.Product.Id}!!! ", ex);
+                    }
                 }
                 
                 await _unitOfWork.SaveAsync();
