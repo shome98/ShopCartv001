@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Retail_MVC.DataAccess.Repository.IRepository;
+using Retail_MVC.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Retail_MVC.Models;
 using Retail_MVC.Utility;
 
 namespace Retail_MVC.Areas.Identity.Pages.Account
@@ -35,6 +35,7 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -42,7 +43,7 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -51,6 +52,7 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _unitOfWork= unitOfWork;
         }
 
         /// <summary>
@@ -159,7 +161,39 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
 
-
+                if (!String.IsNullOrEmpty(Input.Role))
+                {
+                    //await _userManager.AddToRoleAsync(user, Input.Role);
+                    switch (Input.Role)
+                    {
+                        case SD.Role_Vendor:
+                            Vendor vendorobj = new()
+                            {
+                                Name = Input.Name,
+                                StreetAddress = Input.StreetAddress,
+                                City = Input.City,
+                                State = Input.State,
+                                PostalCode = Input.PostalCode,
+                                PhoneNumber = Input.PhoneNumber
+                            };
+                            await _unitOfWork.Vendor.AddAsync(vendorobj);
+                            break;
+                        case SD.Role_Courier:
+                            Courier courierobj = new()
+                            {
+                                Name = Input.Name,
+                                StreetAddress = Input.StreetAddress,
+                                City = Input.City,
+                                State = Input.State,
+                                PostalCode = Input.PostalCode,
+                                PhoneNumber = Input.PhoneNumber
+                            };
+                            await _unitOfWork.Courier.AddAsync(courierobj);
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
