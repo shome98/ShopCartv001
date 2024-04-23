@@ -139,7 +139,7 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
                     Value = i
                 })
             };
-
+            
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -200,7 +200,6 @@ namespace Retail_MVC.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
                     if (!String.IsNullOrEmpty(Input.Role))
                     {
                         await _userManager.AddToRoleAsync(user, Input.Role);
