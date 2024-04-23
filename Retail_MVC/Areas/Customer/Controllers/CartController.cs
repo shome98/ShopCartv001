@@ -132,8 +132,8 @@ namespace Retail_MVC.Areas.Customer.Controllers
 				SuccessUrl = domain+$"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
                 CancelUrl = domain+"customer/cart/index",
 				LineItems = new List<SessionLineItemOptions>(),
-	            
-				            Mode = "payment",
+				Mode = "payment",
+
 			};
             foreach(var item in ShoppingCartVM.ShoppingCartList)
             {
@@ -145,9 +145,12 @@ namespace Retail_MVC.Areas.Customer.Controllers
                         Currency = "inr",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = item.Product.Name
-                        }
+                            Name = item.Product.Name,
+                            Description = item.Product.Description,
+
+                        },
                     },
+
                     Quantity = item.Count
                 };
                 options.LineItems.Add(sessionLineItem);
