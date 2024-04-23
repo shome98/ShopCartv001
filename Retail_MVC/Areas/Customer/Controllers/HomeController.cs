@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Retail_MVC.DataAccess.Repository.IRepository;
 using Retail_MVC.Models;
+using Retail_MVC.Utility;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -52,10 +53,12 @@ namespace Retail_MVC.Areas.Customer.Controllers
             }
             else
             {
-               await _unitOfWork.ShoppingCart.AddAsync(shoppingCart);
+                await _unitOfWork.ShoppingCart.AddAsync(shoppingCart);
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == userId)).Count());
             }
 
-            
+
             await _unitOfWork.SaveAsync();
 
             return RedirectToAction(nameof(Index));

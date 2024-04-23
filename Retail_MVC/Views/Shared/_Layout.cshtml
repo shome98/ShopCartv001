@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -82,7 +84,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link " asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                    <i class="bi bi-cart"></i>&nbsp; Cart
+                                   @*  <i class="bi bi-cart"></i>&nbsp; Cart *@  @await Component.InvokeAsync("ShoppingCart")
                                 </a>
                             </li>
                         }

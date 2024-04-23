@@ -48,7 +48,7 @@ namespace Retail_MVC.DataAccess.Repository
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter = null, string includeProperties = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
