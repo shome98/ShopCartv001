@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Retail_MVC.DataAccess.Repository.IRepository;
 using Retail_MVC.Models;
 using Retail_MVC.Models.ViewModels;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using Retail_MVC.Utility;
+using Retail_MVC.Services;
 
 namespace Retail_MVC.Areas.Admin.Controllers
 {
@@ -13,131 +13,73 @@ namespace Retail_MVC.Areas.Admin.Controllers
     [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Vendor)]
     public class ProductController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public ProductController(IUnitOfWork unitOfWork,IWebHostEnvironment webHostEnvironment)
-        {
-            _unitOfWork = unitOfWork;
-            _webHostEnvironment = webHostEnvironment;
-        }
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
+        public ProductController(IProductService productService,ICategoryService categoryService)
+        {
+            _productService=productService;
+            _categoryService = categoryService;
+        }
 
         public async Task<IActionResult> Index()
         {
-            try
-            {
-                var prodobj = await _unitOfWork.Product.GetAllAsync(includeProperties: "Category");
-                return View(prodobj);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An occured while getting the products!!!", ex);
-            }
-            
+            var prodobj = await _productService.GetAllAsync("Category");
+            return View(prodobj);
         }
 
         public async Task<IActionResult> Upsert(int? id)
         {
             ProductVM productVM = new()
             {
-                CategoryList = (await _unitOfWork.Category.GetAllAsync()).Select(u => new SelectListItem { Text = u.Name, Value = u.Id.ToString() }),
+                CategoryList = (await _categoryService.GetAllAsync()).Select(u => new SelectListItem { Text = u.Name, Value = u.Id.ToString() }),
                 Product = new Product()
             };
             if(id==null || id==0)
             {
                 return View(productVM);
             }
-
             else
             {
-                try
-                {
-                    productVM.Product = await _unitOfWork.Product.GetAsync(u => u.Id == id);
-                    return View(productVM);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"An occured while getting the product with {id}!!!", ex);
-                }
-                
+                productVM.Product = await _productService.GetAsync(id);
+                return View(productVM);
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Upsert(ProductVM productVM, IFormFile? file)
-        {
-            
+        { 
             if(ModelState.IsValid)
             {
-                string wwwRootPath=_webHostEnvironment.WebRootPath;
-                if(file != null)
+                var prod = _productService.ImageHandle(productVM, file);
+                if (prod.Product.Id == 0)
                 {
-                    string fileName=Guid.NewGuid().ToString()+ Path.GetExtension(file.FileName);
-                    string productPath=Path.Combine(wwwRootPath, @"images\product\");
-
-                    if(!string.IsNullOrEmpty(productVM.Product.ImageUrl))
-                    {
-						var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
-                        if(System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
-                    using (var fileStream=new FileStream(Path.Combine(productPath,fileName),FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-
-                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
-                }
-                if(productVM.Product.Id == 0)
-                {
-                    try
-                    {
-                        await _unitOfWork.Product.AddAsync(productVM.Product);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("An occured while adding the new product!!! ", ex);
-                    }
+                    await _productService.AddAsync(prod.Product);
                 }
                 else
                 {
-                    try
-                    {
-                        await _unitOfWork.Product.UpdateAsync(productVM.Product);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"An occured while updating the  product with id{productVM.Product.Id}!!! ", ex);
-                    }
+                    await _productService.UpdateAsync(prod.Product);
                 }
-                
-                await _unitOfWork.SaveAsync();
                 return RedirectToAction("Index", "Product");
             }
             else
             {
-                productVM.CategoryList = (await _unitOfWork.Category.GetAllAsync()).Select(u => new SelectListItem
+                productVM.CategoryList = (await _categoryService.GetAllAsync()).Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
                 });
                 return View(productVM);
             }
-           
         }
 
-       
-
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            Product prodfromdb = await _unitOfWork.Product.GetAsync(u=>u.Id==id);
+            Product prodfromdb = await _productService.GetAsync(id);
             if (prodfromdb == null)
             {
                 return NotFound();
@@ -148,19 +90,13 @@ namespace Retail_MVC.Areas.Admin.Controllers
         [HttpPost,ActionName("Delete")]
         public async Task<IActionResult> DelectPost(int id)
         {
-            Product prodCategory = await _unitOfWork.Product.GetAsync(u => u.Id == id);
-            if (prodCategory == null)
+            Product prodfromdb = await _productService.GetAsync(id);
+            if (prodfromdb == null)
             {
                 return NotFound();
             }
-            await _unitOfWork.Product.RemoveAsync(prodCategory);
-            await _unitOfWork.SaveAsync();
+            await _productService.RemoveAsync(prodfromdb);
             return RedirectToAction("Index", "Product");
         }
-
-
-        
-
-
     }
 }
