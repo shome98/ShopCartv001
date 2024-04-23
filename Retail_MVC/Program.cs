@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Retail_MVC.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Stripe;
+using Retail_MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, Retail_MVC.Services.ProductService>();
 
 var app = builder.Build();
 
