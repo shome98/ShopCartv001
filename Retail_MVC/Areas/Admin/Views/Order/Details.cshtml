@@ -15,6 +15,22 @@
         </div>
     </div>
 }
+@if (TempData["Please"] != null)
+{
+
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto"></strong>
+            <small>@DateTime.Now</small>
+            <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="toast-body">
+            @TempData["Please"]
+        </div>
+    </div>
+}
 <form method="post">
     <input asp-for="OrderHeader.Id" hidden />
     <br />
@@ -260,10 +276,21 @@
                             }
                             @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Courier))
                             {
-
-                                <button type="submit" asp-action="StartProcessing" class="btn btn-primary form-control my-1">Start Processing</button>
-                                <button type="submit" asp-action="ShipOrder" onclick="return validateInput()" class="btn btn-primary form-control my-1">Ship Order</button>
-                                <button asp-action="CancelOrder" type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
+                                @if (Model.OrderHeader.OrderStatus == SD.PaymentStatusApproved)
+                                {
+                                    <button type="submit" asp-action="StartProcessing" class="btn btn-primary form-control my-1">Start Processing</button>
+                                }
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                                {
+                                    @if (Model.OrderHeader.Carrier != null && Model.OrderHeader.TrackingNumber != null)
+                                    {
+                                        <button type="submit" asp-action="ShipOrder"  class="btn btn-primary form-control my-1">Ship Order</button>
+                                    }
+                                }
+                                @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded && Model.OrderHeader.OrderStatus != SD.StatusShipped && Model.OrderHeader.OrderStatus != SD.StatusCancelled)
+                                {
+                                    <button asp-action="CancelOrder" type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
+                                }
                             }
                         </div>
                     </div>

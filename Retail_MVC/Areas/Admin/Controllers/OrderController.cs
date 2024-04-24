@@ -68,7 +68,7 @@ namespace Retail_MVC.Areas.Admin.Controllers
             }
             if (!string.IsNullOrEmpty(OrderVM.OrderHeader.TrackingNumber))
             {
-                orderHeaderFromDb.Carrier = OrderVM.OrderHeader.TrackingNumber;
+                orderHeaderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
             }
             await _unitOfWork.OrderHeader.UpdateAsync(orderHeaderFromDb);
             await _unitOfWork.SaveAsync();
@@ -83,7 +83,7 @@ namespace Retail_MVC.Areas.Admin.Controllers
         [Authorize(Roles =SD.Role_Admin+","+SD.Role_Courier)]
         public async Task<IActionResult> StartProcessing()
         {
-
+            
             await _unitOfWork.OrderHeader.UpdateStatusAsync(OrderVM.OrderHeader.Id, SD.StatusInProcess);
             await _unitOfWork.SaveAsync();
             TempData["Success"] = "Order Details Updated Successfully";
@@ -97,18 +97,26 @@ namespace Retail_MVC.Areas.Admin.Controllers
             var orderHeader=await _unitOfWork.OrderHeader.GetAsync(u=>u.Id==OrderVM.OrderHeader.Id);
             if (orderHeader != null)
             {
-                orderHeader.TrackingNumber=OrderVM.OrderHeader.TrackingNumber;
-                orderHeader.Carrier=OrderVM.OrderHeader.Carrier;
-                orderHeader.OrderStatus = SD.StatusShipped;
-                orderHeader.ShippingDate=DateTime.Now;
-                //if (orderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment)
-                //{
-                //    orderHeader.PaymentDueDate=DateTime.Now.AddDays(3);
-                //}
-                await _unitOfWork.OrderHeader.UpdateAsync(orderHeader);
-                await _unitOfWork.SaveAsync();
-                TempData["Success"] = "Order Shipped Successfully";
-                return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+                if (orderHeader.TrackingNumber != null && orderHeader.Carrier != null)
+                {
+                    orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+                    orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
+                    orderHeader.OrderStatus = SD.StatusShipped;
+                    orderHeader.ShippingDate = DateTime.Now;
+                    //if (orderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment)
+                    //{
+                    //    orderHeader.PaymentDueDate=DateTime.Now.AddDays(3);
+                    //}
+                    await _unitOfWork.OrderHeader.UpdateAsync(orderHeader);
+                    await _unitOfWork.SaveAsync();
+                    TempData["Success"] = "Order Shipped Successfully";
+                    return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+                }
+                else
+                {
+                    TempData["Please"] = "Please enter the carrier and tarcking id";
+                    return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+                }
             }
             return View();
         }

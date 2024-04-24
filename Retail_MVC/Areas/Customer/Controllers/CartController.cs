@@ -160,7 +160,8 @@ namespace Retail_MVC.Areas.Customer.Controllers
             await _unitOfWork.OrderHeader.UpdateStripePaymentIdAsync(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
             await _unitOfWork.SaveAsync();
             Response.Headers.Add("Location", session.Url);
-            return new StatusCodeResult(303);
+			HttpContext.Session.SetInt32(SD.SessionCart,0);
+			return new StatusCodeResult(303);
 
 
 

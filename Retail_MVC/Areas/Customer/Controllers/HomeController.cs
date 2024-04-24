@@ -70,16 +70,21 @@ namespace Retail_MVC.Areas.Customer.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Search(string searchTerm)
+        public async Task<IActionResult> Filter(string searchString)
         {
-            IEnumerable<Product> filtered = await _unitOfWork.Product.GetAllAsync();
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                var result = filtered.Where(u => string.Equals(u.Name, searchTerm, StringComparison.CurrentCultureIgnoreCase) || string.Equals(u.Description, searchTerm, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                return View("Index", result);
-            }
-            return View("Index", filtered);
+            var allProduct = await _unitOfWork.Product.GetAllAsync();
 
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                //var filteredResult = allMovies.Where(n => n.Name.ToLower().Contains(searchString.ToLower()) || n.Description.ToLower().Contains(searchString.ToLower())).ToList();
+
+                var filteredResultNew = allProduct.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+
+                return View("Index", filteredResultNew);
+            }
+
+            return View("Index", allProduct);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

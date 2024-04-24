@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Retail_MVC.DataAccess.Repository.IRepository;
 using Retail_MVC.Utility;
 using System.Security.Claims;
@@ -23,17 +24,17 @@ namespace Retail_MVC.ViewComponents
 
                 if (HttpContext.Session.GetInt32(SD.SessionCart) == null)
                 {
-                    var items = await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == claim.Value);
-                    int count=items.Count();
-                    HttpContext.Session.SetInt32(SD.SessionCart, count);
+                    HttpContext.Session.SetInt32(SD.SessionCart, (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == claim.Value)).Count());
                 }
 
                 return View(HttpContext.Session.GetInt32(SD.SessionCart));
             }
             else
             {
-                HttpContext.Session.Clear();
-                return View(0);
+                HttpContext.Session.SetInt32(SD.SessionCart, 0);
+
+				HttpContext.Session.Clear();
+                return View(HttpContext.Session.GetInt32(SD.SessionCart));
             }
         }
     }
