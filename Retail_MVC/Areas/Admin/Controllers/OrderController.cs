@@ -103,10 +103,11 @@ namespace Retail_MVC.Areas.Admin.Controllers
                     orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
                     orderHeader.OrderStatus = SD.StatusShipped;
                     orderHeader.ShippingDate = DateTime.Now;
-                    //if (orderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment)
-                    //{
-                    //    orderHeader.PaymentDueDate=DateTime.Now.AddDays(3);
-                    //}
+                    if (orderHeader.PaymentStatus == SD.PaymentStatusPending)
+                    {
+                        orderHeader.PaymentDueDate = DateOnly.Parse(DateTime.Now.AddDays(3).ToString());
+
+                    }
                     await _unitOfWork.OrderHeader.UpdateAsync(orderHeader);
                     await _unitOfWork.SaveAsync();
                     TempData["Success"] = "Order Shipped Successfully";
