@@ -246,11 +246,11 @@
                                             <div class="col-8">
 
                                                 <h6 class="my-0 text-primary">@detail.Product.Name</h6>
-                                                <small class="text-muted">Price : @detail.Product.Price.ToString("c")</small><br />
+                                                <small class="text-muted">Price : ₹ @detail.Product.Price</small><br />
                                                 <small class="text-muted">Quantity : @detail.Count</small>
                                             </div>
                                             <div class="col-4 text-end">
-                                                <p class="text-success">@((detail.Count * detail.Price).ToString("c"))</p>
+                                                <p class="text-success">₹ @((detail.Count * detail.Price))</p>
                                             </div>
                                         </div>
                                     </li>
@@ -261,12 +261,18 @@
                                             <h5 class="text-white">TOTAL </h5>
                                         </div>
                                         <div class="col-6 text-end">
-                                            <h5 class="text-white">@Model.OrderHeader.OrderTotal.ToString("c")</h5>
+                                            <h5 class="text-white">₹ @Model.OrderHeader.OrderTotal</h5>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
-                            
+                            @if (User.IsInRole(SD.Role_Customer))
+                            {
+                                @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusPending)
+                                {
+                                    <button type="submit" class="btn btn-success form-control my-1">Pay Now</button>
+                                }
+                            }
                             @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Courier))
                             {
                                 @if (Model.OrderHeader.OrderStatus == SD.PaymentStatusApproved)
@@ -323,12 +329,5 @@
 
 
 @*
-    @if (User.IsInRole(SD.Role_Customer))
-                            {
-                                @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatus &&
-                               Model.OrderHeader.OrderStatus == SD.StatusShipped)
-                                {
-                                    <button type="submit" class="btn btn-success form-control my-1">Pay Now</button>
-                                }
-                            }
+   
 *@
