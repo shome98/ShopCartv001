@@ -217,7 +217,7 @@ namespace Retail_MVC.Areas.Customer.Controllers
             {
                 await _unitOfWork.ShoppingCart.RemoveAsync(cartFromDb);
                 HttpContext.Session.SetInt32(SD.SessionCart,
-                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == cartFromDb.ApplicationUserId)).Count() -1);
+                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == cartFromDb.ApplicationUserId)).Count());
             }
             else
             {
@@ -234,7 +234,7 @@ namespace Retail_MVC.Areas.Customer.Controllers
             var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(u => u.Id == cartId);
             await _unitOfWork.ShoppingCart.RemoveAsync(cartFromDb);
             HttpContext.Session.SetInt32(SD.SessionCart,
-                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == cartFromDb.ApplicationUserId)).Count() - 1);
+                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == cartFromDb.ApplicationUserId)).Count());
             await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }

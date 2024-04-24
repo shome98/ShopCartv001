@@ -55,7 +55,7 @@ namespace Retail_MVC.Areas.Customer.Controllers
             {
                 await _unitOfWork.ShoppingCart.AddAsync(shoppingCart);
                 HttpContext.Session.SetInt32(SD.SessionCart,
-                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == userId)).Count());
+                (await _unitOfWork.ShoppingCart.GetAllAsync(u => u.ApplicationUserId == userId)).Count()+1);
             }
 
 
