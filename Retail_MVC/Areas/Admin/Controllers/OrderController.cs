@@ -247,13 +247,12 @@ namespace Retail_MVC.Areas.Admin.Controllers
             }
         }
 
-
         public async Task<IActionResult> PaymentConfirmation(int orderHeaderId)
         {
             try
             {
                 OrderHeader orderHeader = await _unitOfWork.OrderHeader.GetAsync(u => u.Id == orderHeaderId);
-                if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
+                if (orderHeader.PaymentStatus == SD.PaymentStatusPending)
                 {
                     //delayed payment
                     var service = new SessionService();

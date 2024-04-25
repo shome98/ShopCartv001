@@ -1,5 +1,4 @@
-﻿
-namespace Retail_MVC.Models.ViewModels
+﻿namespace Retail_MVC.Models.ViewModels
 {
 	public class OrderVM
 	{

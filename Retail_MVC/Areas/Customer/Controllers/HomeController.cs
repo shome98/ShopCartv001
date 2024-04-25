@@ -105,7 +105,8 @@ namespace Retail_MVC.Areas.Customer.Controllers
 
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    var filteredResultNew = allProduct.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    //var filteredResultNew = allProduct.Where(n => string.Equals(n.Name.c, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    var filteredResultNew = allProduct.Where(n =>(n.Name.ToLower().Contains(searchString.ToLower()))).ToList();
                     return View("Index", filteredResultNew);
                 }
 
